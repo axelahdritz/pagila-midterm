@@ -10,3 +10,31 @@
  * NOTE:
  * Your results should not contain any duplicate titles.
  */
+
+SELECT 
+    title
+FROM 
+    film
+WHERE film_id NOT IN (
+	SELECT 
+        fa.film_id
+	FROM 
+        film_actor fa
+	JOIN  actor a ON (a.actor_id = fa.actor_id)
+	WHERE 
+        a.first_name LIKE '%F%'
+      OR a.last_name LIKE '%F%'
+)
+AND film_id NOT IN (
+	SELECT
+		i.film_id 
+	FROM 
+        inventory i
+    JOIN rental r ON (r.inventory_id = i.inventory_id)
+    JOIN customer c ON (c.customer_id = r.customer_id)
+    WHERE 
+        c.first_name LIKE '%F%'
+      OR c.last_name LIKE '%F%'
+)
+AND title NOT LIKE '%F%'
+ORDER BY title;
